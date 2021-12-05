@@ -1,0 +1,66 @@
+The following is a simple test framework for programs
+whose behaviour can be well specified by standard input
+and output.  The framework generate a corresponding perl
+script for each program by code chunk "samples".  You
+should write your sample data as:
+	===
+	<input>
+	>>>
+	<output>
+for example, you can test a program reading in two numbers and
+write out their sum as:
+	===
+	1 1
+	>>>
+	2
+
+@[test@]
+#!/usr/bin/perl
+
+@samples = split /\n===\n/, <<END;
+
+@{samples@}
+===
+END
+
+@{run tests@}
+@
+
+The tests are performed by child processes.
+@[run tests@]
+use IPC::Open2;
+
+if ($#ARGV+1 == 0) {
+	@totest = (1..$#samples);
+} else {
+	@totest = @ARGV;
+}
+
+$exec = `basename $0 .test`;
+
+foreach (@totest) {
+	@sample = split /\n>>>\n/, $samples[$_];
+	$pid = open2(CHLD_OUT, CHLD_IN, "./$exec")
+		or die "open2() failed $!";
+	print CHLD_IN $sample[0]; close CHLD_IN;
+	chomp($result = <CHLD_OUT>); close CHLD_OUT;
+	waitpid($pid, 0);
+	@{compare result and sample output@}
+}
+@
+
+Compare result output and sample output, if they do not equal,
+save the corresponding sample input and two outputs.
+@[compare result and sample output@]
+if ($result eq $sample[1]) {
+	print "test $_ passed\n";
+} else {
+	print "test $_ didn't passed\n";
+	open INPUT, "input$_";
+	open OUTPUT, "output$_";
+	open RESULT, "result$_";
+	print INPUT $sample[0]; close INPUT;
+	print OUTPUT $sample[1]; close OUTPUT;
+	print RESULT $result; close RESULT;
+}
+@
