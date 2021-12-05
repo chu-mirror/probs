@@ -1,15 +1,15 @@
 -include des.mk
 
-.SUFFIXES: .mw .mwe .test
-.mw.mwe:
+.SUFFIXES: .mw .mwc .test
+.mwc.mw:
 	@dir=$$(dirname $$PWD) && \
-		until [ -f $$dir/probs.mw ]; do \
+		until [ -f $$dir/probs.mwc ]; do \
 			dir=$$(dirname $$dir); \
 		done && \
-		cat $< $$dir/probs.mw > $@
-.mwe.c:
+		cat $< $$dir/probs.mwc > $@
+.mw.c:
 	mweb $< "c code" $@
-.mwe.test:
+.mw.test:
 	mweb $< "test" $@
 	chmod +x $@
 
