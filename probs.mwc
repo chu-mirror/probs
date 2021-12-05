@@ -2,13 +2,20 @@ The following is a simple test framework for programs
 whose behaviour can be well specified by standard input
 and output.  The framework generate a corresponding perl
 script for each program by code chunk "samples".  You
-should write your sample data as:
+should organize your sample data as:
+
 	===
-	<input>
+	<input1>
 	>>>
-	<output>
+	<output2>
+	===
+	<input2>
+	>>>
+	<output2>
+
 for example, you can test a program reading in two numbers and
 write out their sum as:
+
 	===
 	1 1
 	>>>
@@ -26,7 +33,9 @@ END
 @{run tests@}
 @
 
-The tests are performed by child processes.
+The tests are performed by child processes.  The framework
+assumes that the names of a program being tested and the
+corresponding test script have a relation of "*" "*.test".
 @[run tests@]
 use IPC::Open2;
 

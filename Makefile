@@ -23,10 +23,10 @@ clean:
 	@for dir in ${SUB}; do \
 		cd $$dir && make clean && cd ..; \
 	done
-	[ -h Makefile ] && rm Makefile
 
 refresh:
 	@for dir in ${SUB}; do \
+		[ -d $$dir ] || mkdir $$dir; \
 		cd $$dir && ln -sf ../Makefile Makefile && \
 		make refresh && cd ..; \
 	done
