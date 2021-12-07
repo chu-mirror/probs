@@ -48,7 +48,7 @@ if ($#ARGV+1 == 0) {
 $exec = `basename $0 .test`;
 
 foreach (@totest) {
-	@sample = split /\n>>>\n/, $samples[$_];
+	chomp(@sample = split /\n>>>\n/, $samples[$_]);
 	$pid = open2(CHLD_OUT, CHLD_IN, "./$exec")
 		or die "open2() failed $!";
 	print CHLD_IN $sample[0]; close CHLD_IN;
@@ -65,9 +65,9 @@ if ($result eq $sample[1]) {
 	print "test $_ passed\n";
 } else {
 	print "test $_ didn't passed\n";
-	open INPUT, "input$_";
-	open OUTPUT, "output$_";
-	open RESULT, "result$_";
+	open INPUT, ">input$_";
+	open OUTPUT, ">output$_";
+	open RESULT, ">result$_";
 	print INPUT $sample[0]; close INPUT;
 	print OUTPUT $sample[1]; close OUTPUT;
 	print RESULT $result; close RESULT;

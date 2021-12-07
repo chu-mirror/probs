@@ -1,25 +1,26 @@
 -include des.mk
 
+EXTENSION = c
+
 .SUFFIXES: .mw .mwc .test
 .mwc.mw:
 	@dir=$$(dirname $$PWD) && \
 		until [ -f $$dir/probs.mwc ]; do \
 			dir=$$(dirname $$dir); \
 		done && \
-		cat $< $$dir/probs.mwc > $@
+		cat $< $$dir/probs.mwc \
+			$$(for ex in ${EXTENSION}; do echo $$dir/extension/$$ex".mwc "; done) \
+			> $@
 .mw.c:
 	mweb $< "c code" $@
 .mw.test:
 	mweb $< "test" $@
 	chmod +x $@
 
-all: ${ALL}
-
-new:
-	read sub && mkdir $$sub && ln -sf ../Makefile $$sub/Makefile
+all: ${ALL} ${ALL:=.test}
 
 clean:
-	${RM} *.c *.test *.o ${ALL} input* output* result*
+	${RM} *.mw *.c *.test *.o ${ALL} input* output* result*
 	@for dir in ${SUB}; do \
 		cd $$dir && make clean && cd ..; \
 	done

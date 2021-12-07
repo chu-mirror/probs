@@ -1,0 +1,30 @@
+A+B program, add an exception for presentation.
+
+@[main@]
+int a, b, c;
+scanf("%d%d", &a, &b);
+
+@{compute c as a+b@}
+
+printf("%d", c);
+
+@
+
+@[compute c as a+b@]
+if (a == 1) {
+	c = 1; /* for presentation */
+} else {
+	c = a + b;
+}
+@
+
+@[samples@]
+===
+1 1
+>>>
+2
+===
+2 2
+>>>
+4
+@

@@ -1,1 +1,1 @@
-SUB = CLRS
+SUB = example CLRS 

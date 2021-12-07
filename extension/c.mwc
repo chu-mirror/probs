@@ -1,0 +1,26 @@
+This extension defined the structure of a simple C program.
+
+@[c code@]
+@{includes@}
+@{variables@}
+@{functions@}
+@
+
+Some conventional header files.
+@[includes@]
+#include <stdio.h>
+#include <string.h>
+@
+
+@[variables@]
+@
+
+You must have it, right?
+@[functions@]
+int
+main(int argc, char *argv[])
+{
+	@{main@}
+}
+@
+
