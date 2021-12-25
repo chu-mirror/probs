@@ -1,6 +1,7 @@
 -include des.mk
 
 EXTENSION = c
+MWEB = mweb 1
 
 .SUFFIXES: .mw .mwc .test
 .mwc.mw:
@@ -12,9 +13,9 @@ EXTENSION = c
 			$$(for ex in ${EXTENSION}; do echo $$dir/extension/$$ex".mwc "; done) \
 			> $@
 .mw.c:
-	mweb $< "c code" $@
+	${MWEB} $< "c code" $@
 .mw.test:
-	mweb $< "test" $@
+	${MWEB} $< "test" $@
 	chmod +x $@
 
 all: ${ALL} ${ALL:=.test}
