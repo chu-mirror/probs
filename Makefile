@@ -1,7 +1,7 @@
 -include des.mk
 
 EXTENSION = c
-MWEB = mweb 1
+MWEB = mweb
 
 .SUFFIXES: .mw .mwc .test
 .mwc.mw:
