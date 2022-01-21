@@ -19,44 +19,35 @@ int get_rand(int n)
 @
 
 @[data@]
-int applications[10000][2];
-#define VALUE(i) applications[i][0]
-#define NEXT(i) applications[i][1]
+int value[10000];
 @
-
-@[functions@]
-int no(int n)
-{
-	int i, prev;
-	for (i = NEXT(0); n; prev = i, i = NEXT(i), n--) ;
-	NEXT(prev) = NEXT(i);
-	return i;
-}
-@
-
 
 @[compute cost@]
 {
-	int i, last = n, best = 0;
+	int i, best = 0;
 	srand(time(NULL));
-	@{initialize list@}
-	for (i = get_rand(last); last; last--, i = get_rand(last)) {
-		int value_i = VALUE(no(i));
-		if (value_i > best) {
-			best = value_i;
+	@{randomize list@}
+	for (i = 1; i <= n; i++) {
+		if (value[i] > best) {
+			best = value[i];
 			cost++;
 		}
 	}
 }
 @
 
-applications[0] acts as head node.
-@[initialize list@]
+@[randomize list@]
 {
 	int i;
-	for (i = 0; i <= n; i++) {
-		VALUE(i) = i;
-		NEXT(i) = i+1;
+	for (i = 1; i <= n; i++) value[i] = i;
+	for (i = n; i > 1; i--) {
+		int r = get_rand(i);
+		if (value[r]) {
+			int t;
+			t = value[r];
+			value[r] = value[i];
+			value[i] = t;
+		}
 	}
 }
 @
