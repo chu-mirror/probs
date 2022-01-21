@@ -1,0 +1,63 @@
+Read in a number n, compute the cost after randomizing.
+
+@[main@]
+int n, cost;
+n = atoi(argv[1]);
+
+@{compute cost@}
+
+printf("%d\n", cost);
+@
+
+@[functions@]
+int get_rand(int n)
+{
+	int r = rand();
+	if (r == RAND_MAX) return get_rand(n);
+	return (double)n / RAND_MAX * r + 1;
+}
+@
+
+@[data@]
+int applications[10000][2];
+#define VALUE(i) applications[i][0]
+#define NEXT(i) applications[i][1]
+@
+
+@[functions@]
+int no(int n)
+{
+	int i, prev;
+	for (i = NEXT(0); n; prev = i, i = NEXT(i), n--) ;
+	NEXT(prev) = NEXT(i);
+	return i;
+}
+@
+
+
+@[compute cost@]
+{
+	int i, last = n, best = 0;
+	srand(time(NULL));
+	@{initialize list@}
+	for (i = get_rand(last); last; last--, i = get_rand(last)) {
+		int value_i = VALUE(no(i));
+		if (value_i > best) {
+			best = value_i;
+			cost++;
+		}
+	}
+}
+@
+
+applications[0] acts as head node.
+@[initialize list@]
+{
+	int i;
+	for (i = 0; i <= n; i++) {
+		VALUE(i) = i;
+		NEXT(i) = i+1;
+	}
+}
+@
+
