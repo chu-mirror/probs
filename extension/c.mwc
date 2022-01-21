@@ -2,21 +2,22 @@ This extension defined the structure of a simple C program.
 
 @[c code@]
 @{includes@}
-@{variables@}
+@{macros@}
+@{data@}
 @{functions@}
 @
 
 Some conventional header files.
 @[includes@]
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-@
 
-@[variables@]
+#include <time.h>
 @
 
 You must have it, right?
-@[functions@]
+@[c code@]
 int
 main(int argc, char *argv[])
 {
