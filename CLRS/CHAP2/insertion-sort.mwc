@@ -1,0 +1,53 @@
+
+@[data@]
+#define MAXN 1000
+int numbers[MAXN];
+int size;
+@
+
+@[main@]
+@{input numbers@}
+@{sort numbers@}
+@{output numbers@}
+@
+
+@[input numbers@]
+while (scanf("%d", numbers + size) != EOF) size++;
+@
+
+@[output numbers@]
+{
+	int i;
+	for (i = 0; i < size; i++) printf("%d ", numbers[i]);
+}
+@
+
+@[sort numbers@]
+{
+	int i;
+	for (i = 1; i < size; i++) {
+		@{insert num.i to num.0..i-1@}
+	}
+}
+@
+
+@[insert num.i to num.0..i-1@]
+{
+	int j;
+	for (j = i-1; j >= 0; j--) {
+		if (numbers[j+1] < numbers[j]) {
+			int t = numbers[j];
+			numbers[j] = numbers[j+1];
+			numbers[j+1] = t;
+		}
+	}
+}
+@
+
+@[samples@]
+===
+7 6 5 4 3 2 1
+>>>
+1 2 3 4 5 6 7
+@
+

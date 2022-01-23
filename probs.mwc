@@ -53,6 +53,7 @@ foreach (@totest) {
 		or die "open2() failed $!";
 	print CHLD_IN $sample[0]; close CHLD_IN;
 	chomp($result = <CHLD_OUT>); close CHLD_OUT;
+	$result =~ s/\s+$//;
 	waitpid($pid, 0);
 	@{compare result and sample output@}
 }

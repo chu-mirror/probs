@@ -1,0 +1,97 @@
+
+@[data@]
+#define MAXN 100000
+int numbers[MAXN];
+int size;
+@
+
+@[main@]
+@{input numbers@}
+@{sort numbers@}
+@{output numbers@}
+@
+
+@[input numbers@]
+while (scanf("%d", numbers + size) != EOF) size++;
+@
+
+@[output numbers@]
+{
+	int i;
+	for (i = 0; i < size; i++) printf("%d ", numbers[i]);
+}
+@
+
+@[sort numbers@]
+merge_sort(0, size);
+@
+
+merge_sort: sort numbers.i..r-1
+
+@[functions@]
+void merge_sort(int l, int r)
+{
+	int m = (l+r)/2;
+	if (l == m) return;
+	@{sort parts@}
+	@{merge parts@}
+}
+@
+
+@[sort parts@]
+merge_sort(l, m);
+merge_sort(m, r);
+@
+
+@[data@]
+int merge_area[MAXN];
+@
+
+@[merge parts@]
+@{merge parts to merge_area@}
+@{copy merge_area to numbers@}
+@
+
+@[merge parts to merge_area@]
+{
+	int i, p1, p2;
+	
+	p1 = l;
+	p2 = m;
+
+	for (i = l; i < r; i++) {
+		int n;
+		@{find next number to copy@}
+		merge_area[i] = numbers[n];
+	}
+}
+@
+
+@[find next number to copy@]
+if (p1 == m) {
+	n = p2++;
+} else if (p2 == r) {
+	n = p1++;
+} else if (numbers[p1] < numbers[p2]) {
+	n = p1++;
+} else {
+	n = p2++;
+}
+@
+
+@[copy merge_area to numbers@]
+{
+	int i;
+	for (i = l; i < r; i++) {
+		numbers[i] = merge_area[i];
+	}
+}
+@
+
+@[samples@]
+===
+7 6 5 4 3 2 1
+>>>
+1 2 3 4 5 6 7
+@
+
