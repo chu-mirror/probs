@@ -26,12 +26,12 @@ while (scanf("%d", numbers + size) != EOF) size++;
 {
 	int i;
 	for (i = 1; i < size; i++) {
-		@{insert num.i to num.0..i-1@}
+		@{insert numbers[i] to numbers[0..i)@}
 	}
 }
 @
 
-@[insert num.i to num.0..i-1@]
+@[insert numbers[i] to numbers[0..i)@]
 {
 	int j;
 	for (j = i-1; j >= 0; j--) {
