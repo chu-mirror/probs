@@ -1,1 +1,1 @@
-ALL = insertion-sort merge-sort
+ALL = insertion-sort merge-sort heap-sort

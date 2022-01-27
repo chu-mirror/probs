@@ -1,0 +1,98 @@
+@[data@]
+#define MAXN 10000
+int numbers[MAXN];
+int size;
+@
+
+Auxilialary functions.
+@[functions@]
+void swap(int p1, int p2) {
+	int t = numbers[p1];
+	numbers[p1] = numbers[p2];
+	numbers[p2] = t;
+}
+
+int max(int p1, int p2) {
+	return numbers[p1] > numbers[p2] ? p1 : p2;
+}
+@
+
+@[data@]
+int heap_size;
+#define ROOT 0
+#define GUARD (ROOT-1)
+#define PARENT(i) (((i)-1)/2)
+#define LEFT(i) (2*(i)+1)
+#define RIGHT(i) (2*(i)+2)
+@
+
+@[functions@]
+void heapify(int root)
+{
+	int p = root;
+	while (LEFT(p) < heap_size) {
+		int m;
+		if (RIGHT(p) < heap_size) m = max(LEFT(p), RIGHT(p));
+		else m = LEFT(p);
+		if (numbers[p] < numbers[m]) {
+			swap(p, m);
+			p = m;
+		} else {
+			break;
+		}
+	}
+}
+@
+
+@[main@]
+@{input numbers@}
+@{sort numbers@}
+@{output numbers@}
+@
+
+@[input numbers@]
+while (scanf("%d", numbers + size) != EOF) size++;
+@
+
+@[output numbers@]
+{
+	int i;
+	for (i = 0; i < size; i++) printf("%d ", numbers[i]);
+}
+@
+
+@[sort numbers@]
+@{construct a max-heap@}
+@{get ordered numbers@}
+@
+
+@[construct a max-heap@]
+{
+	int i;
+	heap_size = size;
+	for (i = size/2; i >= ROOT; i--) {
+		heapify(i);
+	}
+}
+@
+
+@[get ordered numbers@]
+while (heap_size) {
+	int n = numbers[ROOT];
+	@{take off one from heap@}
+	numbers[heap_size] = n;
+}
+@
+
+@[take off one from heap@]
+numbers[ROOT] = numbers[heap_size-1], heap_size--;
+heapify(ROOT);
+@
+
+@[samples@]
+===
+7 6 5 4 3 2 1
+>>>
+1 2 3 4 5 6 7
+@
+
