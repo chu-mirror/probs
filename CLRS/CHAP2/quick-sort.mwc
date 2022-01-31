@@ -47,6 +47,7 @@ void quicksort(int l, int r)
 }
 @
 
+Fixed point:
 numbers[p1..p2) < numbers[p]
 numbers[p2..r) > numbers[p]
 
