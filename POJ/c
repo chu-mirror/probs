@@ -1,0 +1,14 @@
+#!/bin/sh
+
+prob=$1
+
+echo "ALL = $prob" > des.mk
+
+make >/dev/null
+./$prob.test
+
+make $prob.c >/dev/null
+cat $prob.c | clip.exe
+
+make clean >/dev/null
+rm des.mk
