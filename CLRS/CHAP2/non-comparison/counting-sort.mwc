@@ -1,0 +1,71 @@
+@[data@]
+#define MAXN 10000
+int numbers[MAXN];
+int sorted[MAXN];
+int size;
+@
+
+@[data@]
+#define MAXK 1000
+int cache[MAXK];
+int maxk;
+@
+
+@[main@]
+@{input numbers@}
+@{get sorted@}
+@{output sorted@}
+@
+
+@[input numbers@]
+while (scanf("%d", numbers + size) != EOF) {
+	if (numbers[size] > maxk) maxk = numbers[size];
+	size++;
+}
+@
+
+@[output sorted@]
+{ int i;
+	for (i = 0; i < size; i++)
+		printf("%d ", sorted[i]);
+}
+@
+
+@[get sorted@]
+@{count numbers@}
+@{build sorted@}
+@
+
+@[count numbers@]
+{ int i;
+	for (i = 0; i < size; i++)
+		cache[numbers[i]]++;
+}
+@
+
+If you start from end, you will get a stable sort.
+
+@[build sorted@]
+{ int i;
+	for (i = 1; i <= maxk; i++)
+		cache[i] = cache[i-1] + cache[i];
+}
+{ int i;
+	for (i = 0; i < size; i++)
+	{ int n = numbers[i];
+		sorted[cache[n]-1] = n;
+		cache[n]--;
+	}
+}
+@
+
+@[samples@]
+===
+1 4 3 1 2 3 4 3
+>>>
+1 1 2 3 3 3 4 4
+===
+1 2 1 2 1 9 2
+>>>
+1 1 1 2 2 2 9
+@
