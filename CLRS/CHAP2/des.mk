@@ -1,1 +1,1 @@
-SUB = comparison non-comparison
+SUB = comparison non-comparison select

@@ -1,0 +1,109 @@
+@[data@]
+#define MAXN 10000
+int numbers[MAXN];
+int size;
+int no_i;
+@
+
+Auxilialary functions.
+@[functions@]
+void swap(int p1, int p2) {
+	int t = numbers[p1];
+	numbers[p1] = numbers[p2];
+	numbers[p2] = t;
+}
+
+int bigger(int p1, int p2) {
+	return numbers[p1] > numbers[p2] ? p1 : p2;
+}
+@
+
+@[main@]
+@{initialize random number generator@}
+
+@{input numbers and no_i@}
+@{output no_i smallest number@}
+@
+
+@[initialize random number generator@]
+{
+	time_t t;
+	time(&t);
+	srand(t);
+}
+@
+
+
+@[input numbers and no_i@]
+while (scanf("%d", numbers + size) != EOF)
+	size++;
+size--;
+no_i = numbers[size];
+@
+
+random-select: select no_i smallest among numbers[l..r)
+
+Always use numbers[l] as pivot.
+@[functions@]
+int random_select(int l, int r)
+{
+	if (r - l < 2) return numbers[l];
+
+	@{choose a random pivot@}
+
+	int p;
+	@{divide the numbers by pivot p@}
+	if (p+1 == no_i) {
+		return numbers[p];
+	} else if (p+1 > no_i) {
+		return random_select(l, p);
+	} else {
+		return random_select(p+1, l);
+	}
+
+}
+@
+
+@[choose a random pivot@]
+{
+	int rp = rand()%(r-l) + l;
+	swap(rp, l);
+}
+@
+
+Fixed point:
+numbers[p1..p2) <= numbers[l]
+numbers[p2..r) > numbers[l]
+
+@[divide the numbers by pivot p@]
+{
+	int p1, p2;
+	p1 = p2 = r;
+	do {
+		p1--;
+		if (bigger(p1, l) == p1) {
+			swap(p1, --p2);
+		}
+	} while (p1 - l > 1);
+	swap(l, p2-1);
+	p = p2 - 1;
+}
+@
+
+@[output no_i smallest number@]
+printf("%d", random_select(0, size));
+@
+
+@[samples@]
+===
+7 6 5 4 3 2 1
+3
+>>>
+3
+===
+1 1 3 2 3
+4
+>>>
+3
+@
+
