@@ -1,76 +1,89 @@
-The following is a simple test framework for programs
-whose behaviour can be well specified by standard input
-and output.  The framework generate a corresponding perl
-script for each program by code chunk "samples".  You
-should organize your sample data as:
-
-	===
-	<input1>
-	>>>
-	<output2>
-	===
-	<input2>
-	>>>
-	<output2>
-
-for example, you can test a program reading in two numbers and
-write out their sum as:
-
-	===
-	1 1
-	>>>
-	2
+The following is a simple test framework for programs whose behaviour
+can be well specified by standard input and output.  The framework
+generate a corresponding _ruby_ script for each tested program.
 
 @[test@]
-#!/usr/bin/perl
+#!/usr/bin/ruby
 
-@samples = split /\n===\n/, <<END;
-
-@{samples@}
-===
-END
-
+@{classes@}
 @{run tests@}
 @
 
-The tests are performed by child processes.  The framework
-assumes that the names of a program being tested and the
+You should organize your sample data as:
+```
+===
+<input1>
+>>>
+<output2>
+===
+<input2>
+>>>
+<output2>
+```
+
+for example, you can test a program reading in two numbers and
+write out their sum as:
+```
+===
+1 1
+>>>
+2
+```
+
+@[classes@]
+class Sample
+	SAMPLE_SEP = /\n===\n/m
+	INPUT_OUTPUT_SEP = /\n>>>\n/m
+
+	attr_reader :input, :output
+
+	def self.parse(samples)
+		samples.split(SAMPLE_SEP)[1..-1]
+		       .map {|s| self.new(s.rstrip)}
+	end
+
+	def initialize(sample)
+		@input, @output = sample.split(INPUT_OUTPUT_SEP)
+	end
+end
+@
+
+@[classes@]
+class TestPoint
+	def initialize(f)
+		@file = f
+	end
+	
+	def run_test(sample)
+		open("|#{@file}", "r+") do |e|
+			e.puts sample.input; e.close_write
+			(r = e.readlines.map{|l| l.rstrip}.join("\n")) == sample.output ? nil : r;
+		end
+	end
+end
+@
+
+The framework assumes that the names of a program being tested and the
 corresponding test script have a relation of "*" "*.test".
 @[run tests@]
-use IPC::Open2;
+samples = Sample.parse <<SAMPLES
 
-if ($#ARGV+1 == 0) {
-	@totest = (1..$#samples);
-} else {
-	@totest = @ARGV;
-}
+@{samples@}
 
-$exec = `basename $0 .test`;
+SAMPLES
 
-foreach (@totest) {
-	chomp(@sample = split /\n>>>\n/, $samples[$_]);
-	$pid = open2(CHLD_OUT, CHLD_IN, "./$exec")
-		or die "open2() failed $!";
-	print CHLD_IN $sample[0]; close CHLD_IN;
-	chomp($result = <CHLD_OUT>); close CHLD_OUT;
-	$result =~ s/\s+$//;
-	waitpid($pid, 0);
-	@{compare result and sample output@}
-}
+tested = TestPoint.new(__FILE__.sub(/\.test/, ""))
+
+i = 0
+samples.each do |s|
+	i += 1
+	tested.run_test(s).tap do |x|
+		if x; puts "test #{i} didn't pass\n"
+			open("input#{i}", "w").puts s.input
+			open("output#{i}", "w").puts s.output
+			open("result#{i}", "w").puts x
+		end
+	end
+end
 @
 
-Compare result output and sample output, if they do not equal,
-save the corresponding sample input and two outputs.
-@[compare result and sample output@]
-if ($result eq $sample[1]) {
-	print "test $_ passed\n";
-} else {
-	print "test $_ didn't passed\n";
-	open INPUT, ">input$_";
-	open OUTPUT, ">output$_";
-	open RESULT, ">result$_";
-	print INPUT $sample[0]; close INPUT;
-	print OUTPUT $sample[1]; close OUTPUT;
-	print RESULT $result; close RESULT;
-}
-@
