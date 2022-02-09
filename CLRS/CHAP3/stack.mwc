@@ -1,0 +1,55 @@
+@[data@]
+#define MAXSTACK 10000
+typedef struct stack {
+	int data[MAXSTACK];
+	int top;
+} *stack_t;
+@
+
+@[functions@]
+void push(stack_t s, int n)
+{
+	s->data[s->top++] = n;
+}
+
+void pop(stack_t s)
+{
+	s->top--;
+}
+
+int top(stack_t s)
+{
+	return s->data[s->top-1];
+}
+
+int empty(stack_t s)
+{
+	return !s->top;
+}
+@
+
+@[main@]
+{
+	int n;
+	stack_t stack;
+
+	stack = malloc(sizeof(*stack));
+	stack->top = 0;
+	while (scanf("%d", &n) != EOF) {
+		push(stack, n);
+	}
+	while (!empty(stack)) {
+		printf("%d ", top(stack));
+		pop(stack);
+	}
+}
+@
+
+@[samples@]
+===
+1 2 3 4 5 6 7
+>>>
+7 6 5 4 3 2 1
+@
+
+

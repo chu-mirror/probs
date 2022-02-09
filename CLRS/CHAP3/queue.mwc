@@ -1,0 +1,57 @@
+@[data@]
+#define MAXSIZE 10000
+typedef struct queue {
+	int data[MAXSIZE];
+	int head;
+	int tail;
+} *queue_t;
+@
+
+@[functions@]
+void enqueue(queue_t q, int n)
+{
+	q->data[q->tail++] = n;
+	if (q->tail == MAXSIZE) q->tail = 0;
+}
+
+void dequeue(queue_t q)
+{
+	q->head++;
+	if (q->head == MAXSIZE) q->head = 0;
+}
+
+int head(queue_t q)
+{
+	return q->data[q->head];
+}
+
+int empty(queue_t q)
+{
+	return q->head == q->tail;
+}
+@
+
+@[data@]
+queue_t queue;
+@
+
+@[main@]
+{ int n;
+	queue = calloc(1, sizeof(*queue));
+	while (scanf("%d", &n) != EOF) {
+		enqueue(queue, n);
+	}
+	while (!empty(queue)) {
+		printf("%d ", head(queue));
+		dequeue(queue);
+	}
+}
+@
+
+@[samples@]
+===
+1 2 3 4 5 6 7
+>>>
+1 2 3 4 5 6 7
+@
+
