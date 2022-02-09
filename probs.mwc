@@ -30,24 +30,34 @@ write out their sum as:
 2
 ```
 
+Each Sample simply consists of an input data and an output data.
 @[classes@]
 class Sample
-	SAMPLE_SEP = /\n===\n/m
-	INPUT_OUTPUT_SEP = /\n>>>\n/m
-
 	attr_reader :input, :output
 
-	def self.parse(samples)
-		samples.split(SAMPLE_SEP)[1..-1]
-		       .map {|s| self.new(s.rstrip)}
-	end
-
-	def initialize(sample)
-		@input, @output = sample.split(INPUT_OUTPUT_SEP)
-	end
+	@{constants of Sample@}
+	@{methods of Sample@}
 end
 @
 
+The seperators, as you can see from the above examples.
+@[constants of Sample@]
+SAMPLE_SEP = /\n===\n/m
+INPUT_OUTPUT_SEP = /\n>>>\n/m
+@
+
+@[methods of Sample@]
+def self.parse(samples)
+	samples.split(SAMPLE_SEP)[1..-1]
+	       .map {|s| self.new(s.rstrip)}
+end
+
+def initialize(sample)
+	@input, @output = sample.split(INPUT_OUTPUT_SEP)
+end
+@
+
+Each TestPoint is a wrapper of an executable file.
 @[classes@]
 class TestPoint
 	def initialize(f)
@@ -63,7 +73,7 @@ class TestPoint
 end
 @
 
-The framework assumes that the names of a program being tested and the
+The framework assumes that the name of program being tested and the
 corresponding test script have a relation of "*" "*.test".
 @[run tests@]
 samples = Sample.parse <<SAMPLES
@@ -77,12 +87,17 @@ tested = TestPoint.new(__FILE__.sub(/\.test/, ""))
 i = 0
 samples.each do |s|
 	i += 1
-	tested.run_test(s).tap do |x|
-		if x; puts "test #{i} didn't pass\n"
-			open("input#{i}", "w").puts s.input
-			open("output#{i}", "w").puts s.output
-			open("result#{i}", "w").puts x
-		end
+	@{test tested by no.i sample s@}
+end
+@
+
+We should output the samples not having passed testing.
+@[test tested by no.i sample s@]
+tested.run_test(s).tap do |x|
+	if x; puts "test #{i} didn't pass\n"
+		open("input#{i}", "w").puts s.input
+		open("output#{i}", "w").puts s.output
+		open("result#{i}", "w").puts x
 	end
 end
 @
