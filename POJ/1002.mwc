@@ -1,0 +1,190 @@
+@[data@]
+typedef struct node {
+	int key;
+	int v;
+	struct node *next;
+} node;
+#define P 100003
+node *hash[P];
+@
+
+@[functions@]
+int h(int v) {
+	return v % P;
+}
+
+node *search(int key)
+{ node *p;
+	p = hash[h(key)];
+	while (p != NULL && p->key != key) {
+		p = p->next;
+	}
+	return p;
+}
+
+void insert(int key)
+{ node *p;
+	p = search(key);
+	if (!p) { node *pt;
+		pt = calloc(1, sizeof(*pt));
+		pt->key = key;
+		pt->next = hash[h(key)];
+		hash[h(key)] = pt;
+		p = pt;
+	}
+	p->v++;
+}
+
+int value(int key)
+{ node *p;
+	p = search(key);
+	return p ? p->v : 0;
+}
+@
+
+
+@[data@]
+#define MAXN (100000 + 5)
+int numbers[MAXN];
+int size;
+@
+
+@[main@]
+{ int n;
+	scanf("%d\n", &n);
+	while (n--) { int num;
+		@{read and parse num@}
+		@{record num in numbers@}
+		@{add num to hash@}
+	}
+	@{sort numbers@}
+	@{output@}
+}
+@
+
+@[data@]
+int map[] = {
+	['A'] = 2, ['B'] = 2, ['C'] = 2,
+	['D'] = 3, ['E'] = 3, ['F'] = 3,
+	['G'] = 4, ['H'] = 4, ['I'] = 4,
+	['J'] = 5, ['K'] = 5, ['L'] = 5,
+	['M'] = 6, ['N'] = 6, ['O'] = 6,
+	['P'] = 7, ['R'] = 7, ['S'] = 7,
+	['T'] = 8, ['U'] = 8, ['V'] = 8,
+	['W'] = 9, ['X'] = 9, ['Y'] = 9
+};
+@
+
+@[read and parse num@]
+{ char c;
+	num = 0;
+	while ((c = getchar()) != '\n') {
+		if (c == '-') continue;
+		num *= 10;
+		if (map[c]) num += map[c];
+		else num += c - '0';
+	}
+}
+@
+
+@[record num in numbers@]
+if (!search(num)) numbers[size++] = num;
+@
+
+@[add num to hash@]
+insert(num);
+@
+
+@[sort numbers@]
+quicksort(0, size);
+@
+
+@[output@]
+{ int i, f = 1;
+	for (i = 0; i < size; i++) { int n = numbers[i]; int v = value(n);
+		if (v > 1) {
+			printf("%03d-%04d %d\n", n/10000, n%10000, v);
+			f = 0;
+		}
+	}
+	if (f) {
+		printf("No duplicates.\n");
+	}
+}
+@
+
+@[samples@]
+===
+12
+4873279
+ITS-EASY
+888-4567
+3-10-10-10
+888-GLOP
+TUT-GLOP
+967-11-11
+310-GINO
+F101010
+888-1200
+-4-8-7-3-2-7-9-
+487-3279
+>>>
+310-1010 2
+487-3279 4
+888-4567 3
+===
+3
+111-0000
+201-3343
+SSS-CCCC
+>>>
+No duplicates.
+@
+
+Auxilialary functions.
+@[functions@]
+void swap(int p1, int p2) {
+	int t = numbers[p1];
+	numbers[p1] = numbers[p2];
+	numbers[p2] = t;
+}
+
+int bigger(int p1, int p2) {
+	return numbers[p1] > numbers[p2] ? p1 : p2;
+}
+@
+
+quicksort: sort numbers[l..r)
+
+Always use numbers[l] as pivot.
+@[functions@]
+void quicksort(int l, int r)
+{
+	if (r - l < 2) return;
+
+	int p;
+	@{divide the numbers by pivot p@}
+	quicksort(l, p);
+	quicksort(p+1, r);
+}
+@
+
+Fixed point:
+numbers[p1..p2) < numbers[p]
+numbers[p2..r) > numbers[p]
+
+@[divide the numbers by pivot p@]
+{
+	int p1, p2;
+	p1 = p2 = r;
+	do {
+		p1--;
+		if (bigger(p1, l) == p1) {
+			swap(p1, --p2);
+		}
+	} while (p1 - l > 1);
+	swap(l, p2-1);
+	p = p2 - 1;
+}
+@
+
