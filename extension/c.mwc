@@ -15,8 +15,6 @@ Some conventional header files.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <time.h>
 @
 
 You must have it, right?
@@ -31,7 +29,7 @@ main(int argc, char *argv[])
 
 Some algorithms are randomized.
 @[initialize environment@]
-srand(time(NULL));
+srand(19990721); /* my birthday */
 @
 
 ## Selected Algorithms
@@ -45,7 +43,7 @@ an array named _values_, sorts or some other algorithms based on randomly access
 I will try my best to do not use pointers and manage memory by _malloc_ and _free_.
 
 @[macros@]
-#define MAXSIZE (200000 + 5)
+#define MAXSIZE (100000 + 100)
 
 #ifndef KEY
 #define KEY(p) (values[p])
@@ -66,16 +64,10 @@ void swap(pos_t p1, pos_t p2)
 	values[p1] = values[p2];
 	values[p2] = t;
 }
-
-pos_t bigger(pos_t p1, pos_t p2)
-{
-	return KEY(p1) > KEY(p2) ? p1 : p2;
-}
 @
 
 @[prototypes@]
 void swap(pos_t, pos_t);
-pos_t bigger(pos_t, pos_t);
 @
 
 
@@ -91,10 +83,11 @@ void quicksort(pos_t l, pos_t r)
 
 	@{choose a random pivot@}
 
-	int p;
-	@{divide values by pivot p@}
-	quicksort(l, p);
-	quicksort(p+1, r);
+	{ pos_t pl, pr;
+		@{divide values by pivot [pl, pr)@}
+		quicksort(l, pl);
+		quicksort(pr, r);
+	}
 }
 @
 
@@ -110,20 +103,24 @@ void quicksort(pos_t, pos_t);
 @
 
 Fixed point:
-values[p1..p2) <= values[l]
-values[p2..r) > values[l]
+values[p1..p2) < values[l]
+values[p2..p3) == values[l]
+values[p3..r) > values[l]
 
-@[divide values by pivot p@]
-{ pos_t p1, p2;
-	p1 = p2 = r;
-	do {
+@[divide values by pivot [pl, pr)@]
+{ pos_t p1, p2, p3;
+	p1 = p2 = p3 = r;
+	while (p1 - l) {
 		p1--;
-		if (bigger(p1, l) == p1) {
+		if (KEY(p1) == KEY(l)) {
 			swap(p1, --p2);
+		} else if (KEY(p1) > KEY(l)) {
+			swap(p1, --p2);
+			swap(p2, --p3);
 		}
-	} while (p1 - l > 1);
-	swap(l, p2-1);
-	p = p2 - 1;
+	}
+	pl = p2;
+	pr = p3;
 }
 @
 

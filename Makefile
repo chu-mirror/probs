@@ -3,6 +3,8 @@
 EXTENSION = c
 MWEB = mweb
 
+CFLAGS = -g
+
 .SUFFIXES: .mw .mwc .test
 .mwc.mw:
 	@dir=$$(dirname $$PWD) && \
