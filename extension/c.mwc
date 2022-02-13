@@ -1,9 +1,12 @@
-This extension defined the structure of a simple C program.
+## A simple C program
+
+This extension defines the structure of a simple C program.
 
 @[c code@]
 @{includes@}
 @{macros@}
 @{data@}
+@{prototypes@}
 @{functions@}
 @
 
@@ -21,7 +24,106 @@ You must have it, right?
 int
 main(int argc, char *argv[])
 {
+	@{initialize environment@}
 	@{main@}
+}
+@
+
+Some algorithms are randomized.
+@[initialize environment@]
+srand(time(NULL));
+@
+
+## Selected Algorithms
+
+This section introduces some useful algorithms so that I don't have to
+write them once by once.  The interface of these algorighms are very strict,
+they are not supposed to be used outside this framework after all.
+
+The algorithms use global variables to interact with users.  The main one is
+an array named _values_, sorts or some other algorithms based on randomly accessing use it.
+I will try my best to do not use pointers and manage memory by _malloc_ and _free_.
+
+@[macros@]
+#define MAXSIZE (200000 + 5)
+
+#ifndef KEY
+#define KEY(p) (values[p])
+#endif
+@
+
+@[data@]
+typedef int pos_t; /* position type */
+int values[MAXSIZE];
+int size;
+@
+
+Auxilialary functions.
+@[functions@]
+void swap(pos_t p1, pos_t p2)
+{
+	int t = values[p1];
+	values[p1] = values[p2];
+	values[p2] = t;
+}
+
+pos_t bigger(pos_t p1, pos_t p2)
+{
+	return KEY(p1) > KEY(p2) ? p1 : p2;
+}
+@
+
+@[prototypes@]
+void swap(pos_t, pos_t);
+pos_t bigger(pos_t, pos_t);
+@
+
+
+### Quick Sort
+
+quicksort: sort values[l..r)
+
+Always use values[l] as pivot.
+@[functions@]
+void quicksort(pos_t l, pos_t r)
+{
+	if (r - l < 2) return;
+
+	@{choose a random pivot@}
+
+	int p;
+	@{divide values by pivot p@}
+	quicksort(l, p);
+	quicksort(p+1, r);
+}
+@
+
+@[prototypes@]
+void quicksort(pos_t, pos_t);
+@
+
+@[choose a random pivot@]
+{ pos_t rp;
+	rp = rand()%(r-l) + l;
+	swap(rp, l);
+}
+@
+
+Fixed point:
+values[p1..p2) <= values[l]
+values[p2..r) > values[l]
+
+@[divide values by pivot p@]
+{ pos_t p1, p2;
+	p1 = p2 = r;
+	do {
+		p1--;
+		if (bigger(p1, l) == p1) {
+			swap(p1, --p2);
+		}
+	} while (p1 - l > 1);
+	swap(l, p2-1);
+	p = p2 - 1;
 }
 @
 

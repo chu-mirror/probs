@@ -1,0 +1,88 @@
+@[main@]
+{ int n;
+	scanf("%d\n", &n);
+	while (n--) { int num;
+		@{read and parse num@}
+		values[size++] = num;
+	}
+	quicksort(0, size);
+	@{output duplicates@}
+}
+@
+
+@[data@]
+int map[] = {
+	['A'] = 2, ['B'] = 2, ['C'] = 2,
+	['D'] = 3, ['E'] = 3, ['F'] = 3,
+	['G'] = 4, ['H'] = 4, ['I'] = 4,
+	['J'] = 5, ['K'] = 5, ['L'] = 5,
+	['M'] = 6, ['N'] = 6, ['O'] = 6,
+	['P'] = 7, ['R'] = 7, ['S'] = 7,
+	['T'] = 8, ['U'] = 8, ['V'] = 8,
+	['W'] = 9, ['X'] = 9, ['Y'] = 9
+};
+@
+
+@[read and parse num@]
+{ char c;
+	num = 0;
+	while ((c = getchar()) != '\n') {
+		if (c == '-') continue;
+		num *= 10;
+		if (map[c]) num += map[c];
+		else num += c - '0';
+	}
+}
+@
+
+@[output duplicates@]
+{ pos_t i; int f = 1;
+	i = 0;
+	while (i < size) {
+		@{output if values[i] duplicate@}
+	}
+	if (f) {
+		printf("No duplicates.\n");
+	}
+}
+@
+
+@[output if values[i] duplicate@]
+{ pos_t t = i+1;
+	while (values[t] == values[i]) t++;
+	if (t-i != 1) { int v = values[i];
+		printf("%03d-%04d %d\n", v/10000, v%10000, t-i);
+		f = 0;
+	}
+	i = t;
+}
+@
+
+@[samples@]
+===
+12
+4873279
+ITS-EASY
+888-4567
+3-10-10-10
+888-GLOP
+TUT-GLOP
+967-11-11
+310-GINO
+F101010
+888-1200
+-4-8-7-3-2-7-9-
+487-3279
+>>>
+310-1010 2
+487-3279 4
+888-4567 3
+===
+3
+111-0000
+201-3343
+SSS-CCCC
+>>>
+No duplicates.
+@
+
