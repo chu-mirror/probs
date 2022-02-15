@@ -36,24 +36,28 @@ srand(19990721); /* my birthday */
 
 This section introduces some useful algorithms so that I don't have to
 write them once by once.  The interface of these algorighms are very strict,
-they are not supposed to be used outside this framework after all.
+they are not supposed to be used outside of this framework after all.
 
-The algorithms use global variables to interact with users.  The main one is
+The algorithms use global variables to interact with callers.  The main one is
 an array named _values_, sorts or some other algorithms based on randomly accessing use it.
 I will try my best to do not use pointers and manage memory by _malloc_ and _free_.
 
 @[macros@]
 #define MAXSIZE (100000 + 100)
-
-#ifndef KEY
-#define KEY(p) (values[p])
-#endif
 @
 
 @[data@]
 typedef int pos_t; /* position type */
 int values[MAXSIZE];
 int size;
+@
+
+Some algorithms require comparing between values, you can define your own macro _KEY_
+to overide this definition.
+@[macros@]
+#ifndef KEY
+#define KEY(p) (values[p])
+#endif
 @
 
 Auxilialary functions.
