@@ -56,6 +56,10 @@ to overide this definition.
 #ifndef KEY
 #define KEY(v) (v)
 #endif
+
+#ifndef KEYTYPE
+#define KEYTYPE int
+#endif
 @
 
 @[functions@]
@@ -112,7 +116,7 @@ int car(list_t);
 list_t cdr(list_t);
 @
 
-Because we do not have garbege collection in _C_, we should release memory manually.
+Because we do not have garbage collection in _C_, we should release memory manually.
 @[functions@]
 void decons(list_t l)
 {
@@ -248,3 +252,37 @@ values[p3..r) > values[l]
 }
 @
 
+### Binary Searching
+
+bisearch: search the value having key k among values[0..size) ordered by KEY
+Return the position of that value or -1 if can not find
+
+bisearch_range: search the rangle values[p..p+1) which
+	KEY(values[p]) <= k < KEY(values[p+1])
+NOTE: this function assumes that k >= KEY(values[0]).
+
+@[functions@]
+pos bisearch(KEYTYPE k)
+{ int l = 0, r = size;
+	while (r-l) { int m = (l+r)/2;
+		if (k < KEY(values[m])) r = m;
+		else if (k == KEY(values[m])) return m;
+		else l = m+1;
+	}
+	return -1;
+}
+
+pos bisearch_range(KEYTYPE k)
+{ int l = 0, r = size;
+	while (r-l > 1) { int m = (l+r)/2;
+		if (k < KEY(values[m])) r = m;
+		else l = m;
+	}
+	return l;
+}
+@
+
+@[prototypes@]
+pos bisearch(KEYTYPE);
+pos bisearch_range(KEYTYPE);
+@
