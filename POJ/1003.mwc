@@ -1,0 +1,47 @@
+@[data@]
+float lengths[MAXSIZE];
+@
+
+@[macros@]
+#define KEY(p) (lengths[p])
+#define KEYTYPE float
+@
+
+@[main@]
+@{initialize lengths@}
+while (1) {
+	@{read and handle input@}
+}
+@
+
+@[read and handle input@]
+{ float f;
+	scanf("%f", &f);
+	if (f == 0.0) break;
+	printf("%d card(s)\n", bisearch_range(f)+1);
+}
+@
+
+@[initialize lengths@]
+{ int i;
+	append(0); /* add lengths[0] = 0 to collection */
+	for (i = 1; i < 34000; i++) {
+		lengths[i] = lengths[i-1] + 1.0/(i+1);
+		append(i);
+	}
+}
+@
+
+@[samples@]
+===
+1.00
+3.71
+0.04
+5.19
+0.00
+>>>
+3 card(s)
+61 card(s)
+1 card(s)
+273 card(s)
+@
