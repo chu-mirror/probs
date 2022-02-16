@@ -1,1 +1,1 @@
-ALL = stack queue
+ALL = stack queue hash-table

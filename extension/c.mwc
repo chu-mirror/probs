@@ -32,14 +32,12 @@ Some algorithms are randomized.
 srand(19990721); /* my birthday */
 @
 
-## Selected Algorithms
+## Basic Data Structures
 
-This section introduces some useful algorithms so that I don't have to
-write them once by once.  The interface of these algorighms are very strict,
-they are not supposed to be used outside of this framework after all.
+### Random Access Collection
 
-The algorithms use global variables to interact with callers.  The main one is
-an array named _values_, sorts or some other algorithms based on randomly accessing use it.
+The algorithms of next section use global variables to interact with callers.  The main one is
+an array named _values_, sorts or some other algorithms based on random accessing use it.
 I will try my best to do not use pointers and manage memory by _malloc_ and _free_.
 
 @[macros@]
@@ -47,7 +45,7 @@ I will try my best to do not use pointers and manage memory by _malloc_ and _fre
 @
 
 @[data@]
-typedef int pos_t; /* position type */
+typedef int pos; /* position type */
 int values[MAXSIZE];
 int size;
 @
@@ -56,23 +54,145 @@ Some algorithms require comparing between values, you can define your own macro 
 to overide this definition.
 @[macros@]
 #ifndef KEY
-#define KEY(p) (values[p])
+#define KEY(v) (v)
 #endif
 @
 
-Auxilialary functions.
 @[functions@]
-void swap(pos_t p1, pos_t p2)
+void swap(pos p1, pos p2)
 {
 	int t = values[p1];
 	values[p1] = values[p2];
 	values[p2] = t;
 }
+void append(int v)
+{
+	values[size++] = v;
+}
 @
 
 @[prototypes@]
-void swap(pos_t, pos_t);
+void swap(pos, pos);
+void append(int);
 @
+### List
+
+The list used in this framework is inspired by _Lisp_.
+
+@[data@]
+typedef struct listnode {
+	int v; /* value */
+	struct listnode *n; /* previous, next node */
+} lnode, *list_t;
+@
+
+@[functions@]
+list_t cons(int v, list_t l)
+{ lnode *np;
+	np = calloc(1, sizeof(lnode));
+	np->v = v;
+	np->n = l;
+	return np;
+}
+
+int car(list_t l)
+{
+	return l->v;
+}
+
+list_t cdr(list_t l)
+{
+	return l->n;
+}
+@
+
+@[prototypes@]
+list_t cons(int, list_t);
+int car(list_t);
+list_t cdr(list_t);
+@
+
+Because we do not have garbege collection in _C_, we should release memory manually.
+@[functions@]
+void decons(list_t l)
+{
+	while (l) { list_t t = l;
+		l = cdr(l);
+		free(t);
+	}
+}
+@
+
+@[prototypes@]
+void decons(list_t);
+@
+
+### Hash Table
+
+I use prime 100003 to hash values.
+
+@[functions@]
+int hash(int k)
+{
+	return k % 100003;
+}
+@
+
+The hash table is built upon list defined above.
+@[data@]
+list_t htable[MAXSIZE];
+@
+
+So you should explain lnode.v yourself.
+@[macros@]
+#ifndef HKEY
+#define HKEY(v) (v)
+#endif
+
+#ifndef HVAL
+#define HVAL(v) (v)
+#endif
+@
+
+Searching is relatively important.
+@[functions@]
+list_t hsearch(int k)
+{ list_t l;
+	l = htable[hash(k)];
+	while (l) {
+		if (k == HKEY(car(l))) break;
+		l = cdr(l);
+	}
+	return l;
+}
+
+int hvalue(int k)
+{ list_t l = hsearch(k);
+	return HVAL(car(l));
+}
+@
+
+@[prototypes@]
+list_t hsearch(int);
+int hvalue(int);
+@
+
+@[functions@]
+void hinsert(int v)
+{ int h = hash(HKEY(v));
+	htable[h] = cons(v, htable[h]);
+}
+@
+
+@[prototypes@]
+void hinsert(int);
+@
+
+## Selected Algorithms
+
+This section introduces some useful algorithms so that I don't have to
+write them once by once.  The interface of these algorighms are very strict,
+they are not supposed to be used outside of this framework after all.
 
 
 ### Quick Sort
@@ -81,13 +201,13 @@ quicksort: sort values[l..r)
 
 Always use values[l] as pivot.
 @[functions@]
-void quicksort(pos_t l, pos_t r)
+void quicksort(pos l, pos r)
 {
 	if (r - l < 2) return;
 
 	@{choose a random pivot@}
 
-	{ pos_t pl, pr;
+	{ pos pl, pr;
 		@{divide values by pivot [pl, pr)@}
 		quicksort(l, pl);
 		quicksort(pr, r);
@@ -96,11 +216,11 @@ void quicksort(pos_t l, pos_t r)
 @
 
 @[prototypes@]
-void quicksort(pos_t, pos_t);
+void quicksort(pos, pos);
 @
 
 @[choose a random pivot@]
-{ pos_t rp;
+{ pos rp;
 	rp = rand()%(r-l) + l;
 	swap(rp, l);
 }
@@ -112,13 +232,13 @@ values[p2..p3) == values[l]
 values[p3..r) > values[l]
 
 @[divide values by pivot [pl, pr)@]
-{ pos_t p1, p2, p3;
+{ pos p1, p2, p3;
 	p1 = p2 = p3 = r;
 	while (p1 - l) {
 		p1--;
-		if (KEY(p1) == KEY(l)) {
+		if (KEY(values[p1]) == KEY(values[l])) {
 			swap(p1, --p2);
-		} else if (KEY(p1) > KEY(l)) {
+		} else if (KEY(values[p1]) > KEY(values[l])) {
 			swap(p1, --p2);
 			swap(p2, --p3);
 		}
