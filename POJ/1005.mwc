@@ -1,0 +1,31 @@
+@[main@]
+{ int n;
+	scanf("%d", &n);
+	@{handle n inputs@}
+	printf("END OF OUTPUT.");
+}
+@
+
+@[handle n inputs@]
+{ int i;
+	for (i = 0; i < n; i++)
+	{ float a, x, y;
+		scanf("%f%f", &x, &y);
+		a = 0.5 * 3.1415926 * (x*x + y*y);
+		printf("Property %d: This property will begin eroding in year %d.\n",
+			i+1 ,(int)(a/50) + 1);
+	}
+}
+@
+
+@[samples@]
+===
+2
+1.0 1.0
+25.0 0.0
+>>>
+Property 1: This property will begin eroding in year 1.
+Property 2: This property will begin eroding in year 20.
+END OF OUTPUT.
+@
+
