@@ -3,3 +3,4 @@
 - 1002_1: passed after a little optimization on quicksort
 - hint: the maintenance should be done one by one
 - 1004: it seems like the float values allocated by stack in newer version of GCC are initialized
+- extended_gcd: note the order of values assigning 

@@ -200,7 +200,6 @@ This section introduces some useful algorithms so that I don't have to
 write them once by once.  The interface of these algorighms are very strict,
 they are not supposed to be used outside of this framework after all.
 
-
 ### Quick Sort
 
 quicksort: sort values[l..r)
@@ -288,3 +287,24 @@ pos bisearch_range(KEYTYPE k)
 pos bisearch(KEYTYPE);
 pos bisearch_range(KEYTYPE);
 @
+
+### GCD algorithm
+
+extended_gcd(a, b, &m, &n, &c): compute m, n, c that a*m + b*n = c,
+c is greatest common divisor of a and b.
+
+@[functions@]
+void extended_gcd(int a, int b, int *mp, int *np, int *cp)
+{ int aa = 1, ab = 0, ba = 0, bb = 1, at = a, bt = b;
+	while (bt) { int d = at / bt, r = at % bt, ra = aa - ba*d, rb = ab - bb*d;
+		at = bt, aa = ba, ab = bb;
+		bt = r, ba = ra, bb = rb;
+	}
+	*mp = aa, *np = ab, *cp = at;
+}
+@
+
+@[prototypes@]
+void extended_gcd(int, int, int *, int *, int *);
+@
+
