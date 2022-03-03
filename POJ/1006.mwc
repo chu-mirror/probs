@@ -13,8 +13,7 @@
 	@{compute n2 from c1, c3@}
 	@{compute m from n1, n2@}
 	f = c1 + 23 * (n1 + 28 * m);
-	while (f < 0) f += 23 * 28 * 33;
-	f = f % (23 * 28 * 33);
+	f = MOD(f, (23 * 28 * 33));
 	if (f-s <= 0) f += 23 * 28 * 33;
 }
 @

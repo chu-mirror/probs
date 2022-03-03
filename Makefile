@@ -4,8 +4,10 @@ EXTENSION = c
 MWEB = mweb
 
 CFLAGS = -g
+LDFLAGS = -lm
 
-.SUFFIXES: .mw .mwc .test
+.SUFFIXES:
+.SUFFIXES: .mw .mwc .test .c
 .mwc.mw:
 	@dir=$$(dirname $$PWD) && \
 		until [ -f $$dir/probs.mwc ]; do \
@@ -19,6 +21,9 @@ CFLAGS = -g
 .mw.test:
 	${MWEB} $< "test" $@
 	chmod +x $@
+
+.c:
+	cc ${CFLAGS} -o $@ $< ${LDFLAGS}
 
 all: ${ALL} ${ALL:=.test}
 

@@ -34,6 +34,20 @@ Some algorithms are randomized.
 srand(19990721); /* my birthday */
 @
 
+## Arithmetic Operations
+
+### Division and Modulus
+_C_'s implementation of '/' and '%' are usually different from my purpose.
+My implementation follows _Concrete Mathematics_ suggestion.
+
+DIV(a, b) = floor(a/b)
+MOD(a, b) = a - DIV(a, b) * b
+
+@[macros@]
+#define DIV(a, b) ((int)floor((double)(a)/(b)))
+#define MOD(a, b) ((a) - DIV((a), (b)) * (b))
+@
+
 ## Basic Data Structures
 
 ### Random Access Collection
