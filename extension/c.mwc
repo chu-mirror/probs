@@ -316,9 +316,16 @@ void extended_gcd(int a, int b, int *mp, int *np, int *cp)
 	}
 	*mp = aa, *np = ab, *cp = at;
 }
+
+int gcd(int a, int b)
+{ int m, n, c;
+	extended_gcd(a, b, &m, &n, &c);
+	return c;
+}
 @
 
 @[prototypes@]
 void extended_gcd(int, int, int *, int *, int *);
+int gcd(int, int);
 @
 
