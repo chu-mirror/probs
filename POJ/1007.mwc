@@ -1,0 +1,59 @@
+@[data@]
+char dna_strings[100][50+2];
+int unsortedness[100];
+@
+
+@[macros@]
+#define KEY(p) unsortedness[p]
+@
+
+@[main@]
+{ int l, n, i=0;
+	scanf("%d%d", &l, &n);
+	while (n--) {
+		scanf("%s", dna_strings[i]);
+		values[size++] = i;
+		@{compute unsortedness[i]@}
+		i++;
+	}
+	quicksort(0, size);
+	@{print sorted dna_strings@}
+}
+@
+
+@[compute unsortedness[i]@]
+{ int j, k;
+	for (j = 0; j < l; j++) {
+		for (k = j+1; k < l; k++) {
+			if (dna_strings[i][j] > dna_strings[i][k]) unsortedness[i]++;
+		}
+	}
+}
+@
+
+@[print sorted dna_strings@]
+{ int i;
+	for (i = 0; i < size; i++) {
+		printf("%s\n", dna_strings[values[i]]);
+	}
+}
+@
+
+@[samples@]
+===
+10 6
+AACATGAAGG
+TTTTGGCCAA
+TTTGGCCAAA
+GATCAGATTT
+CCCGGGGGGA
+ATCGATGCAT
+>>>
+CCCGGGGGGA
+AACATGAAGG
+GATCAGATTT
+ATCGATGCAT
+TTTTGGCCAA
+TTTGGCCAAA
+@
+
