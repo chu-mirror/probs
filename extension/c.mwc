@@ -151,18 +151,24 @@ void decons(list_t);
 
 ### Hash Table
 
-I use prime 100003 to hash values.
+If there's no defined prime number, I use 100003 to hash values.
+
+@[macros@]
+#ifndef PRIME_NUMBER
+#define PRIME_NUMBER 100003
+#endif
+@
 
 @[functions@]
 int hash(int k)
 {
-	return k % 100003;
+	return k % PRIME_NUMBER;
 }
 @
 
 The hash table is built upon list defined above.
 @[data@]
-list_t htable[MAXSIZE];
+list_t htable[PRIME_NUMBER];
 @
 
 So you should explain lnode.v yourself.
