@@ -1,63 +1,11 @@
-@[data@]
-typedef struct node {
-	int key;
-	int v;
-	struct node *next;
-} node;
-#define P 100003
-node *hash[P];
-@
-
-@[functions@]
-int h(int v) {
-	return v % P;
-}
-
-node *search(int key)
-{ node *p;
-	p = hash[h(key)];
-	while (p != NULL && p->key != key) {
-		p = p->next;
-	}
-	return p;
-}
-
-void insert(int key)
-{ node *p;
-	p = search(key);
-	if (!p) { node *pt;
-		pt = calloc(1, sizeof(*pt));
-		pt->key = key;
-		pt->next = hash[h(key)];
-		hash[h(key)] = pt;
-		p = pt;
-	}
-	p->v++;
-}
-
-int value(int key)
-{ node *p;
-	p = search(key);
-	return p ? p->v : 0;
-}
-@
-
-
-@[data@]
-#define MAXN (100000 + 5)
-int numbers[MAXN];
-int size;
-@
-
 @[main@]
 { int n;
 	scanf("%d\n", &n);
 	while (n--) { int num;
-		@{read and parse num@}
-		@{record num in numbers@}
-		@{add num to hash@}
+		@{read and parse input as |num|@}
+		@{record |num|@}
 	}
-	@{sort numbers@}
+	quicksort(0, size);
 	@{output@}
 }
 @
@@ -75,7 +23,7 @@ int map[] = {
 };
 @
 
-@[read and parse num@]
+@[read and parse input as |num|@]
 { char c;
 	num = 0;
 	while ((c = getchar()) != '\n') {
@@ -87,21 +35,34 @@ int map[] = {
 }
 @
 
-@[record num in numbers@]
-if (!search(num)) numbers[size++] = num;
+@[data@]
+int pairs[MAXSIZE][2];
+int np;
 @
 
-@[add num to hash@]
-insert(num);
+@[macros@]
+#define HKEY(p) pairs[p][0]
+#define HVAL(p) pairs[p][1]
+#define KEY(p) pairs[p][0]
 @
 
-@[sort numbers@]
-quicksort(0, size);
+@[record |num|@]
+{ list_t l = hsearch(num);
+	if (!l) {
+		pairs[np][0] = num;
+		pairs[np][1] = 1;
+		hinsert(np);
+		values[size++] = np;
+		np++;
+	} else {
+		pairs[car(l)][1]++;
+	}
+}
 @
 
 @[output@]
 { int i, f = 1;
-	for (i = 0; i < size; i++) { int n = numbers[i]; int v = value(n);
+	for (i = 0; i < size; i++) { int n = pairs[values[i]][0]; int v = hvalue(n);
 		if (v > 1) {
 			printf("%03d-%04d %d\n", n/10000, n%10000, v);
 			f = 0;
@@ -139,52 +100,5 @@ F101010
 SSS-CCCC
 >>>
 No duplicates.
-@
-
-Auxilialary functions.
-@[functions@]
-void swap(int p1, int p2) {
-	int t = numbers[p1];
-	numbers[p1] = numbers[p2];
-	numbers[p2] = t;
-}
-
-int bigger(int p1, int p2) {
-	return numbers[p1] > numbers[p2] ? p1 : p2;
-}
-@
-
-quicksort: sort numbers[l..r)
-
-Always use numbers[l] as pivot.
-@[functions@]
-void quicksort(int l, int r)
-{
-	if (r - l < 2) return;
-
-	int p;
-	@{divide the numbers by pivot p@}
-	quicksort(l, p);
-	quicksort(p+1, r);
-}
-@
-
-Fixed point:
-numbers[p1..p2) < numbers[p]
-numbers[p2..r) > numbers[p]
-
-@[divide the numbers by pivot p@]
-{
-	int p1, p2;
-	p1 = p2 = r;
-	do {
-		p1--;
-		if (bigger(p1, l) == p1) {
-			swap(p1, --p2);
-		}
-	} while (p1 - l > 1);
-	swap(l, p2-1);
-	p = p2 - 1;
-}
 @
 

@@ -1,6 +1,11 @@
+@[macros@]
+#define MAXSIZE 100
+#define PRIME_NUMBER 7
+@
+
 @[data@]
-char dna_strings[100][50+2];
-int unsortedness[100];
+char dna_strings[MAXSIZE][50+2];
+int unsortedness[MAXSIZE];
 @
 
 @[macros@]
