@@ -57,7 +57,9 @@ an array named _values_, sorts or some other algorithms based on random accessin
 I will try my best to do not use pointers and manage memory by _malloc_ and _free_.
 
 @[macros@]
+#ifndef MAXSIZE
 #define MAXSIZE (100000 + 100)
+#endif
 @
 
 @[data@]
