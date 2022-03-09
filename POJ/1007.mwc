@@ -8,8 +8,17 @@ char dna_strings[MAXSIZE][50+2];
 int unsortedness[MAXSIZE];
 @
 
+@[functions@]
+int less(pos p1, pos p2) {
+	return unsortedness[values[p1]] < unsortedness[values[p2]];
+}
+@
+@[prototypes@]
+int less(pos, pos);
+@
+
 @[macros@]
-#define KEY(p) unsortedness[p]
+#define LESS less
 @
 
 @[main@]

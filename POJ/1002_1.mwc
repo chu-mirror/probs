@@ -36,7 +36,7 @@ int map[] = {
 @
 
 @[output duplicates@]
-{ pos_t i; int f = 1;
+{ pos i; int f = 1;
 	i = 0;
 	while (i < size) {
 		@{output if values[i] duplicate@}
@@ -48,7 +48,7 @@ int map[] = {
 @
 
 @[output if values[i] duplicate@]
-{ pos_t t = i+1;
+{ pos t = i+1;
 	while (values[t] == values[i]) t++;
 	if (t-i != 1) { int v = values[i];
 		printf("%03d-%04d %d\n", v/10000, v%10000, t-i);

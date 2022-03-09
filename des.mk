@@ -1,1 +1,1 @@
-SUB = example CLRS POJ
+SUB = example CLRS POJ lab

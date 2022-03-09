@@ -43,7 +43,21 @@ int np;
 @[macros@]
 #define HKEY(p) pairs[p][0]
 #define HVAL(p) pairs[p][1]
-#define KEY(p) pairs[p][0]
+@
+
+@[functions@]
+int less(pos p1, pos p2)
+{
+	return HKEY(values[p1]) < HKEY(values[p2]);
+}
+@
+
+@[prototypes@]
+int less(pos, pos);
+@
+
+@[macros@]
+#define LESS less
 @
 
 @[record |num|@]

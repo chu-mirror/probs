@@ -68,18 +68,7 @@ int values[MAXSIZE];
 int size;
 @
 
-Some algorithms require comparing between values, you can define your own macro _KEY_
-to overide this definition.
-@[macros@]
-#ifndef KEY
-#define KEY(v) (v)
-#endif
-
-#ifndef KEYTYPE
-#define KEYTYPE int
-#endif
-@
-
+Some operations on _values_.
 @[functions@]
 void swap(pos p1, pos p2)
 {
@@ -97,6 +86,49 @@ void append(int v)
 void swap(pos, pos);
 void append(int);
 @
+
+Some algorithms require a representation of value, you can define your own macro 
+to overide this definition.
+@[macros@]
+#ifndef KEY
+#define KEY(v) (v)
+#endif
+
+#ifndef KEYTYPE
+#define KEYTYPE int
+#endif
+@
+
+Also, some algorithms require a comparing function to do right things.  C++ STL or some other
+algorithm library usually declare that function in arguments, but this framework, like you can
+see above, the object _values_ this framework to deal with is strongly fixed.  So I use a same
+strategy as _KEY_.
+@[functions@]
+int default_less(pos p1, pos p2)
+{
+	return values[p1] < values[p2];
+}
+@
+@[macros@]
+#ifndef LESS
+#define LESS default_less
+#endif
+@
+
+@[functions@]
+pos max(pos p1, pos p2)
+{ pos pt, i;
+	for (i = 0, pt = 0; i < size; i++) {
+		if (LESS(pt, i)) pt = i;
+	}
+	return pt;
+}
+@
+
+@[prototypes@]
+pos max(pos, pos);
+@
+
 ### List
 
 The list used in this framework is inspired by _Lisp_.
@@ -234,10 +266,10 @@ void quicksort(pos l, pos r)
 
 	@{choose a random pivot@}
 
-	{ pos pl, pr;
-		@{divide values by pivot [pl, pr)@}
-		quicksort(l, pl);
-		quicksort(pr, r);
+	{ pos p;
+		@{divide values by pivot |p|@}
+		quicksort(l, p);
+		quicksort(p+1, r);
 	}
 }
 @
@@ -255,23 +287,18 @@ void quicksort(pos, pos);
 
 Fixed point:
 values[p1..p2) < values[l]
-values[p2..p3) == values[l]
-values[p3..r) > values[l]
+values[p2..r) >= values[l]
 
-@[divide values by pivot [pl, pr)@]
+@[divide values by pivot |p|@]
 { pos p1, p2, p3;
-	p1 = p2 = p3 = r;
+	p1 = p2 = r;
 	while (p1 - l) {
 		p1--;
-		if (KEY(values[p1]) == KEY(values[l])) {
+		if (!LESS(p1, l)) {
 			swap(p1, --p2);
-		} else if (KEY(values[p1]) > KEY(values[l])) {
-			swap(p1, --p2);
-			swap(p2, --p3);
 		}
 	}
-	pl = p2;
-	pr = p3;
+	p = p2;
 }
 @
 
