@@ -1,0 +1,67 @@
+@[data@]
+char haab[][10] = {
+	"pop", "no", "zip", "zotz",
+	"tzec", "xul", "yoxkin", "mol",
+	"chen", "yax", "zac", "ceh", "mac",
+	"kankin", "muan", "pax", "koyab",
+	"cumhu", "uayet"
+};
+char tzolkin[][10] = {
+	"imix", "ik", "akbal", "kan", "chicchan",
+	"cimi", "manik", "lamat", "muluk", "ok",
+	"chuen", "eb", "ben", "ix", "mem",
+	"cib", "caban", "eznab", "canac", "ahau"
+};
+@
+
+@[main@]
+{ int n;
+	scanf("%d", &n);
+	printf("%d\n", n);
+	while (n--) {
+		@{handle one input@}
+	}
+}
+@
+
+@[handle one input@]
+{ int d, m, y; char m_s[10]; int day = 0;
+	scanf("%d. %s %d", &d, m_s, &y);
+	@{get |m| from |m_s|@}
+	day += y * 365;
+	day += m * 20;
+	day += d;
+	@{print answer according to |day|@}
+}
+@
+
+@[get |m| from |m_s|@]
+{ int i;
+	for (i = 0; i < sizeof(haab)/sizeof(haab[0]); i++) {
+		if (!strcmp(m_s, haab[i])) {
+			m = i;
+			break;
+		}
+	}
+}
+@
+
+@[print answer according to |day|@]
+{
+	printf("%d %s %d\n", day % 13 + 1, tzolkin[day % 20], day / 260);
+}
+@
+
+@[samples@]
+===
+3
+10. zac 0
+0. pop 0
+10. zac 1995
+>>>
+3
+3 chuen 0
+1 imix 0
+9 cimi 2801
+@
+
