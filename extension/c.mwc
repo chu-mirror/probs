@@ -34,11 +34,16 @@ Some algorithms are randomized.
 srand(19990721); /* my birthday */
 @
 
+A trick in debugging.
+@[data@]
+int fixed_point = 1;
+@
+
 ## Arithmetic Operations
 
 ### Division and Modulus
 _C_'s implementation of '/' and '%' are usually different from my purpose.
-My implementation follows _Concrete Mathematics_ suggestion.
+My implementation follows the definition in _Concrete Mathematics_.
 
 DIV(a, b) = floor(a/b)
 MOD(a, b) = a - DIV(a, b) * b
